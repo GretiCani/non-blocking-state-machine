@@ -9,17 +9,28 @@ import rnd.statemachine.ProcessData;
 
 @Service
 public class PaymentProcessorHelper {
-    
+     
+    /**
+     * A long running process
+     * @param data
+     * @param consumerFn
+     */
     @Async("threadPoolTaskExecutor")
     public void process(ProcessData data, Consumer<ProcessData> consumerFn) {
         try{
+            //simulate a long running process
             Thread.sleep(2000);
-        }catch(Exception e){}
-        if(((OrderData)data).getPayment() < 1.00) {
-        	((OrderData)data).setEvent(OrderEvent.paymentError);
-        } else {
-            ((OrderData)data).setEvent(OrderEvent.paymentSuccess);
+
+            if(((OrderData)data).getPayment() < 1.00) {
+                ((OrderData)data).setEvent(OrderEvent.paymentError);
+            } else {
+                ((OrderData)data).setEvent(OrderEvent.paymentSuccess);
+            }
+
+        }catch(InterruptedException e){
+            //TODO: Use a new state transition to include system error
         }
+
         consumerFn.accept(data);
     }
 }
