@@ -32,3 +32,6 @@ build-eclipse/
 # gradle stuff
 .gradle/
 build/
+
+# sts4 files
+.sts4-cache

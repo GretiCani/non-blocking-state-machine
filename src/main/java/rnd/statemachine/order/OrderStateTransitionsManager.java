@@ -30,6 +30,10 @@ public class OrderStateTransitionsManager extends AbstractStateTransitionsManage
 		log.info("Post-event: " + data.getEvent().toString());
 		dbService.getStates().put(((OrderData) data).getOrderId(),
 				(OrderState) data.getEvent().nextState());
+				
+        //TODO: if the post-event is either paymentSuccess or paymentError
+		//send an email to the customer with a confirmation number
+		
 		log.info("Final state: " + dbService.getStates().get(((OrderData) data).getOrderId()).name());
 		log.info("??*************************************");
 	}
