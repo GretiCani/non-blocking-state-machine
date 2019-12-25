@@ -1,14 +1,18 @@
 package rnd.statemachine;
 
 public abstract class AbstractStateTransitionsManager implements StateTransitionsManager {
-    protected abstract ProcessData initializeState(ProcessData data) throws ProcessException;
-    protected abstract ProcessData processStateTransition(ProcessData data) throws ProcessException;
 
     @Override
     public ProcessData processPreEvent(ProcessData data) throws ProcessException {
     	initializeState(data);
         return processStateTransition(data);
     }
+   
+    //to be called by the callback function
+    protected abstract void processPostEvent(ProcessData data);
+
+    protected abstract void initializeState(ProcessData data) throws ProcessException;
     
-    protected abstract void processPostEvent(ProcessData data) throws ProcessException;
+    //calls the processor with a callback function
+    protected abstract ProcessData processStateTransition(ProcessData data) throws ProcessException;
 }

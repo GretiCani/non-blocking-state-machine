@@ -1,6 +1,6 @@
 package rnd.statemachine;
 
-public class ProcessException extends Exception {
+public class ProcessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public ProcessException(String message) {

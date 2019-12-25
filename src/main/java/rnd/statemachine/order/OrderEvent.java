@@ -6,8 +6,10 @@ import rnd.statemachine.Processor;
 
 /**  
  * DEFAULT    -  submit -> orderProcessor()   -> orderCreated   -> PMTPENDING
- * PMTPENDING -  pay    -> paymentProcessor() -> paymentError   -> PMTPENDING
- * PMTPENDING -  pay    -> paymentProcessor() -> paymentSuccess -> COMPLETED 
+ * PMTPENDING -  pay    -> paymentProcessor() -> paymentError   -> PMTERROREMAILPENDING
+ * PMTERROREMAILPENDING- errorEmail  -> paymentErrorEmailProcessor()   -> pmtErrorEmailSent   -> PMTPENDING
+ * PMTPENDING -  pay    -> paymentProcessor() -> paymentSuccess -> PMTSUCCESSEMAILPENDING
+ * PMTSUCCESSEMAILPENDING - successEmail -> paymentSuccessEmailProcessor() -> pmtSuccessEmailSent -> COMPLETED
  */
 public enum OrderEvent implements ProcessEvent {
 
@@ -82,11 +84,11 @@ public enum OrderEvent implements ProcessEvent {
         }
         @Override
         public ProcessState nextState() {
-                return OrderState.Completed;
+                return OrderState.paymentSuccessEmailPending;
         }
 		@Override
 		public String getMessage() {
-			return "Payment success, order completed";
+			return "Payment success, processing success email";
 		}
     },
     paymentError {
@@ -101,12 +103,88 @@ public enum OrderEvent implements ProcessEvent {
         
         @Override
         public ProcessState nextState() {
+                return OrderState.paymentErrorEmailPending;
+        }
+
+		@Override
+		public String getMessage() {
+			return "Payment processing error, processing error email";
+		}
+    },
+    errorEmail {
+    	/**
+    	 * This event does not trigger any process
+    	 * So return null 
+    	 */
+        @Override
+        public Class<? extends Processor> nextStepProcessor() {
+            return PaymentErrorEmailProcessor.class;
+        }
+        @Override
+        public ProcessState nextState() {
+                return OrderState.paymentErrorEmailPending;
+        }
+		@Override
+		public String getMessage() {
+			return "Payment error, processing error email";
+		}
+    },
+    successEmail {
+    	/**
+    	 * This event does not trigger any process
+    	 * So return null 
+    	 */
+        @Override
+        public Class<? extends Processor> nextStepProcessor() {
+            return PaymentSuccessEmailProcessor.class;
+        }
+        
+        @Override
+        public ProcessState nextState() {
+                return OrderState.paymentSuccessEmailPending;
+        }
+
+		@Override
+		public String getMessage() {
+			return "Payment processing success, processing success email";
+		}
+    },
+    paymentErrorEmailSent {
+
+        @Override
+        public Class<? extends Processor> nextStepProcessor() {
+            return null;
+        }
+        
+        @Override
+        public ProcessState nextState() {
                 return OrderState.PaymentPending;
         }
 
 		@Override
 		public String getMessage() {
-			return "Payment processing error";
+			return "Payment processing error, email sent";
 		}
-    };
+    },
+    paymentSuccessEmailSent {
+    	/**
+    	 * This event does not trigger any process
+    	 * So return null 
+    	 */
+        @Override
+        public Class<? extends Processor> nextStepProcessor() {
+            return null;
+        }
+        
+        @Override
+        public ProcessState nextState() {
+                return OrderState.Completed;
+        }
+
+		@Override
+		public String getMessage() {
+			return "Payment processing success, order completed";
+		}
+    }
+    ;
 }
