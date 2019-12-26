@@ -21,12 +21,11 @@ public class PaymentProcessorHelper {
             //simulate a long running process
             Thread.sleep(2000);
 
-            if(((OrderData)data).getPayment() < 1.00) {
-                ((OrderData)data).setEvent(OrderEvent.paymentError);
-            } else {
+            if(((OrderData)data).getPayment() > 0) {
                 ((OrderData)data).setEvent(OrderEvent.paymentSuccess);
+            } else {
+                ((OrderData)data).setEvent(OrderEvent.paymentError);
             }
-
         }catch(InterruptedException e){
             //TODO: Use a new state transition to include system error
         }

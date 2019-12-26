@@ -56,7 +56,7 @@ public class OrderStateTransitionsManager extends AbstractStateTransitionsManage
 		if (processor.isAsync()) {
 			processor.processAsync(data, this::processPostEvent);
 		} else {
-			data = (OrderData)this.context.getBean(data.getEvent().nextStepProcessor()).process(data);
+			data = (OrderData)processor.process(data);
 			processPostEvent(data);;
 		}
 		return data;
