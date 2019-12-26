@@ -1,9 +1,8 @@
 package rnd.statemachine.order;
 
-import rnd.statemachine.ProcessState;
 import rnd.statemachine.AbstractProcessor;
 import rnd.statemachine.ProcessEvent;
-import rnd.statemachine.Processor;
+import rnd.statemachine.ProcessState;
 
 /**  
  * DEFAULT    -  submit -> orderProcessor()   -> orderCreated   -> PMTPENDING
@@ -111,14 +110,13 @@ public enum OrderEvent implements ProcessEvent {
         }
     },
     errorEmail {
-    	/**
-    	 * This event does not trigger any process
-    	 * So return null 
-    	 */
         @Override
         public Class<? extends AbstractProcessor> nextStepProcessor() {
             return PaymentErrorEmailProcessor.class;
         }
+        /**
+         * This event has no effect on state so return current state
+         */
         @Override
         public ProcessState nextState() {
                 return OrderState.paymentErrorEmailPending;
@@ -129,15 +127,14 @@ public enum OrderEvent implements ProcessEvent {
         }
     },
     successEmail {
-    	/**
-    	 * This event does not trigger any process
-    	 * So return null 
-    	 */
         @Override
         public Class<? extends AbstractProcessor> nextStepProcessor() {
             return PaymentSuccessEmailProcessor.class;
         }
         
+        /**
+         * This event has no effect on state so return current state
+         */
         @Override
         public ProcessState nextState() {
                 return OrderState.paymentSuccessEmailPending;
@@ -150,6 +147,10 @@ public enum OrderEvent implements ProcessEvent {
     },
     paymentErrorEmailSent {
 
+    	/**
+    	 * This event does not trigger any process
+    	 * So return null 
+    	 */
         @Override
         public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;

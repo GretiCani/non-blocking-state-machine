@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import rnd.statemachine.AbstractProcessor;
-import rnd.statemachine.AsyncProcessor;
 import rnd.statemachine.ProcessData;
-import rnd.statemachine.Processor;
 
 @Service
 @RequiredArgsConstructor

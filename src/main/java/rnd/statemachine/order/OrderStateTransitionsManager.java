@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rnd.statemachine.AbstractProcessor;
 import rnd.statemachine.AbstractStateTransitionsManager;
-import rnd.statemachine.AsyncProcessor;
 import rnd.statemachine.ProcessData;
 import rnd.statemachine.ProcessException;
 
