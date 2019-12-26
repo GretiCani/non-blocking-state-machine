@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rnd.statemachine.AbstractProcessor;
 import rnd.statemachine.AbstractStateTransitionsManager;
+import rnd.statemachine.AsyncProcessor;
 import rnd.statemachine.ProcessData;
 import rnd.statemachine.ProcessException;
 
@@ -51,7 +53,13 @@ public class OrderStateTransitionsManager extends AbstractStateTransitionsManage
  
 		OrderData data = (OrderData) sdata;
 		log.info("Pre-event: " + data.getEvent().toString());
-		this.context.getBean(data.getEvent().nextStepProcessor()).process(data, this::processPostEvent);
+		AbstractProcessor processor = this.context.getBean(data.getEvent().nextStepProcessor());
+		if (processor.isAsync()) {
+			processor.processAsync(data, this::processPostEvent);
+		} else {
+			data = (OrderData)this.context.getBean(data.getEvent().nextStepProcessor()).process(data);
+			processPostEvent(data);;
+		}
 		return data;
 	}
 

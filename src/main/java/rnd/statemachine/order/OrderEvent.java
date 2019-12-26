@@ -1,6 +1,7 @@
 package rnd.statemachine.order;
 
 import rnd.statemachine.ProcessState;
+import rnd.statemachine.AbstractProcessor;
 import rnd.statemachine.ProcessEvent;
 import rnd.statemachine.Processor;
 
@@ -15,7 +16,7 @@ public enum OrderEvent implements ProcessEvent {
 
     submit {
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
                 return OrderProcessor.class;
         }
         
@@ -31,7 +32,6 @@ public enum OrderEvent implements ProcessEvent {
 		public String getMessage() {
 			return "Order submitted";
 		}
-
     },
     orderCreated {
     	/**
@@ -39,7 +39,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;
         }
         
@@ -52,11 +52,10 @@ public enum OrderEvent implements ProcessEvent {
 		public String getMessage() {
 			return "Order create, payment pending";
 		}
-
     },
     pay {
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
                 return PaymentProcessor.class;
         }
         
@@ -71,7 +70,7 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "We are processing your payment, please check your email for the order confirmation number";
-		}
+        }
     },
     paymentSuccess {
     	/**
@@ -79,7 +78,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;
         }
         @Override
@@ -89,7 +88,7 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment success, processing success email";
-		}
+        }
     },
     paymentError {
     	/**
@@ -97,7 +96,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;
         }
         
@@ -109,7 +108,7 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment processing error, processing error email";
-		}
+        }
     },
     errorEmail {
     	/**
@@ -117,7 +116,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return PaymentErrorEmailProcessor.class;
         }
         @Override
@@ -127,7 +126,7 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment error, processing error email";
-		}
+        }
     },
     successEmail {
     	/**
@@ -135,7 +134,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return PaymentSuccessEmailProcessor.class;
         }
         
@@ -147,12 +146,12 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment processing success, processing success email";
-		}
+        }
     },
     paymentErrorEmailSent {
 
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;
         }
         
@@ -164,7 +163,7 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment processing error, email sent";
-		}
+        }
     },
     paymentSuccessEmailSent {
     	/**
@@ -172,7 +171,7 @@ public enum OrderEvent implements ProcessEvent {
     	 * So return null 
     	 */
         @Override
-        public Class<? extends Processor> nextStepProcessor() {
+        public Class<? extends AbstractProcessor> nextStepProcessor() {
             return null;
         }
         
@@ -184,7 +183,6 @@ public enum OrderEvent implements ProcessEvent {
 		@Override
 		public String getMessage() {
 			return "Payment processing success, order completed";
-		}
-    }
-    ;
+        }
+    };
 }
