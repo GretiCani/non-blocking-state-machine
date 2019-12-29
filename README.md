@@ -9,11 +9,11 @@ An online order processing system is considered as an example for the demo. The 
 
 |Initial State |Pre-event |   Processor    |        Post-event  |  Final State  |
 | --- | --- | --- | --- | --- |  
-|DEFAULT    ->|  submit ->| OrderProcessor ->| orderCreated   -> |PMTPENDING |
-|PMTPENDING -> | pay    ->| PaymentProcessor ->| paymentError   -> |PMTERROREMAILPENDING |
-|PMTERROREMAILPENDING -> | errorEmail    ->| PaymentErrorEmailProcessor ->| pmtErrorEmailSent   -> |PMTPENDING |
-|PMTPENDING ->|  pay    ->| PaymentProcessor ->| paymentSuccess ->| PMTSUCCESSEMAILPENDING |
-|PMTSUCCESSEMAILPENDING -> | successEmail    ->| PaymentSuccessEmailProcessor ->| pmtSuccessEmailSent   -> |COMPLETED |
+|DEFAULT     |  submit  | OrderProcessor  | orderCreated     |PMTPENDING |
+|PMTPENDING   | pay     | PaymentProcessor  | paymentError     |PMTERROREMAILPENDING |
+|PMTERROREMAILPENDING   | errorEmail     | PaymentErrorEmailProcessor  | pmtErrorEmailSent     |PMTPENDING |
+|PMTPENDING  |  pay     | PaymentProcessor  | paymentSuccess  | PMTSUCCESSEMAILPENDING |
+|PMTSUCCESSEMAILPENDING   | successEmail     | PaymentSuccessEmailProcessor  | pmtSuccessEmailSent     |COMPLETED |
 
 where the [PaymentProcessor](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/PaymentProcessor.java) is considered a long running process and made asynchronous and non-blocking. All other processors are assumed synchronous. The above state transitions are configured in Java enums, [OrderState](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/OrderState.java) and [OrderEvent](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/OrderEvent.java).
 
