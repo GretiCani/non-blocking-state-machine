@@ -1,7 +1,5 @@
 package rnd.statemachine.order;
 
-import java.util.function.Consumer;
-
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,15 +13,15 @@ import rnd.statemachine.ProcessData;
 public class PaymentSuccessEmailProcessor extends AbstractProcessor {
     
     @Override
-    public void processAsync(ProcessData data, Consumer<ProcessData> consumerFn) {
-		//TODO: call the email service
+    public ProcessData process(ProcessData data) {
+		//TODO: generate order confirmation number and call the email service
 		log.info("Sent payment success email");
 		((OrderData)data).setEvent(OrderEvent.paymentSuccessEmailSent);
-		consumerFn.accept(data);
+		return data;
 	}
 
 	@Override
 	public boolean isAsync() {
-		return true;
+		return false;
 	}
 }

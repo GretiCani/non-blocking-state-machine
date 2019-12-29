@@ -4,80 +4,51 @@ This Spring Boot Java project extends the [simple-state-machine](https://github.
 
 ## Usage
 
-The usage of this framework is illustrated using an online order processing system. The order processing system is assumed to have the following state transitions:
+The first step in using the framework is to configure the state transitions. 
+An online order processing system is considered as an example for the demo. The order processing system is assumed to have the following state transitions:
 
 |Initial State |Pre-event |   Processor    |        Post-event  |  Final State  |
 | --- | --- | --- | --- | --- |  
-|DEFAULT    ->|  submit ->| orderProcessor() ->| orderCreated   -> |PMTPENDING |
-|PMTPENDING -> | pay    ->| paymentProcessor() ->| paymentError   -> |PMTPENDING |
-|PMTPENDING ->|  pay    ->| paymentProcessor() ->| paymentSuccess ->| COMPLETED |
+|DEFAULT    ->|  submit ->| OrderProcessor ->| orderCreated   -> |PMTPENDING |
+|PMTPENDING -> | pay    ->| PaymentProcessor ->| paymentError   -> |PMTERROREMAILPENDING |
+|PMTERROREMAILPENDING -> | errorEmail    ->| PaymentErrorEmailProcessor ->| pmtErrorEmailSent   -> |PMTPENDING |
+|PMTPENDING ->|  pay    ->| PaymentProcessor ->| paymentSuccess ->| PMTSUCCESSEMAILPENDING |
+|PMTSUCCESSEMAILPENDING -> | successEmail    ->| PaymentSuccessEmailProcessor ->| pmtSuccessEmailSent   -> |COMPLETED |
 
-The paymentProcessor() is considered a long running process and made asynchronous and non-blocking.
+where the [PaymentProcessor](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/PaymentProcessor.java) is considered a long running process and made asynchronous and non-blocking. All other processors are assumed synchronous. The above state transitions are configured in Java enums, [OrderState](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/OrderState.java) and [OrderEvent](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/OrderEvent.java).
 
-The framework is illustrated with an order processing demo. The demo includes the following scenarios:
+The demo includes an [OrderController](https://github.com/mapteb/non-blocking-state-machine/blob/master/src/main/java/rnd/statemachine/order/OrderController.java) with two APIs to test the following scenarios:
 
-### Happy path
-
-User submits an order\
-System responds with an order ID.\
-User makes a valid payment for the order\
-System responds with a message "We are processing your payment. Please check your email for the order confirmation number."
-
-### Error path
+### Submit an order
 
 User submits an order\
 System responds with an order ID.\
-User makes an invalid payment for the order\
-System responds with a message "We are processing your payment. Please check your email for the order confirmation number."
-
-Two APIs are included to test the above steps. Here are the curl commands to call the APIs:
-
-### Happy path testing
+Log messages confirm the state transition.
 
 $ curl -X POST http://localhost:8080/order/items
 
-Order submitted, orderId = 1e6092da-3bef-4377-8a02-5a4cb93f4a96
+### Submit an invalid payment (amount = 0.00)
 
-The stdout log displays the state transitions like:
+User submits an invalid payment for the order\
+System responds with a message "We are processing your payment. Please check your email for the order confirmation number."\
+System also sends an email with an error message.\
+Log messages confirm the state transition.
 
-Initial state: Default\
-Pre-event: submit\
-Post-event: orderCreated\
-Final state: PaymentPending
+$ curl -X POST http://localhost:8080/orders/1e6092da-3bef-4377-8a02-5a4cb93f4a96/payment/0
+
+### Submit a valid payment (amount > 0.00)
+
+User submits a valid payment for the order\
+System responds with a message "We are processing your payment. Please check your email for the order confirmation number."\
+System also sends an email with a success message.\
+Log messages confirm the state transition.
+
 
 $ curl -X POST http://localhost:8080/orders/1e6092da-3bef-4377-8a02-5a4cb93f4a96/payment/1
-We are processing your payment, please check your email for the order confirmation number
 
-The stdout logs display the state transformations for the above cases like:
+### Submit a valid payment for an order which is already completed
 
-Initial state: PaymentPending\
-Pre-event: pay\
-Post-event: paymentSuccess\
-Final state: Completed
+User submits a valid payment for the order\
+System responds with a message "Order is completed for orderId=1e6092da-3bef-4377-8a02-5a4cb93f4a96."\
+No state transition occurs in this case.
 
-(For brevity, sending email is not included in the demo.)
-
-### Error path testing
-
-$ curl -X POST http://localhost:8080/order/items
-
-Order submitted, orderId = 97b0c82a-3dfd-4c94-a9f6-e8aa08e25e88
-
-The stdout log displays the state transitions like:
-
-Initial state: Default\
-Pre-event: submit\
-Post-event: orderCreated\
-Final state: PaymentPending
-
-$ curl -X POST http://localhost:8080/orders/97b0c82a-3dfd-4c94-a9f6-e8aa08e25e88/payment/0
-We are processing your payment, please check your email for the order confirmation number
-
-The stdout logs display the state transformations for the above cases like:
-
-Initial state: PaymentPending\
-Pre-event: pay\
-Post-event: paymentError\
-Final state: PaymentPending
-
-(Invalid payment is simulated using 0 value for the payment)
