@@ -43,7 +43,6 @@ System responds with a message "We are processing your payment. Please check you
 System also sends an email with a success message.\
 Log messages confirm the state transition.
 
-
 $ curl -X POST http://localhost:8080/orders/1e6092da-3bef-4377-8a02-5a4cb93f4a96/payment/1
 
 ### Submit a valid payment for an order which is already completed
@@ -52,3 +51,4 @@ User submits a valid payment for the order\
 System responds with a message "Order is completed for orderId=1e6092da-3bef-4377-8a02-5a4cb93f4a96."\
 No state transition occurs in this case.
 
+$ curl -X POST http://localhost:8080/orders/1e6092da-3bef-4377-8a02-5a4cb93f4a96/payment/2
