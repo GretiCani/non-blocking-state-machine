@@ -63,6 +63,10 @@ $ curl -X POST http://localhost:8080/orders/1e6092da-3bef-4377-8a02-5a4cb93f4a96
 
 Interested readers can run the included Apache JMeter [test plan](https://github.com/mapteb/non-blocking-state-machine/tree/master/src/test/jmeter) to test for multiple simultaneous users placing orders and paying for the orders.
 
+### Also See
+
+The technique use in this Java project can be easily adapted to front-end JavaScript UI applications. Here is an [example](https://github.com/mapteb/todomvc-revisited) for the TodoMVC UI application.
+
 ### More Info
 
 More info about this project is also available at:  [dzone](https://dzone.com/articles/drafta-non-blocking-state-machine)
