@@ -70,4 +70,3 @@ The technique used in this Java project can be easily adapted to front-end JavaS
 ### More Info
 
 More info about this project is also available at:  [dzone](https://dzone.com/articles/drafta-non-blocking-state-machine)
-
