@@ -67,7 +67,7 @@ Interested readers can run the included Apache JMeter [test plan](https://github
 
 An improved version of this project is at: [state-transitions-with-spring-integration](https://github.com/mapteb/state-transitions-with-spring-integration)
 
-The technique used in this Java project can be easily adapted to front-end JavaScript UI applications. Here is an [example](https://github.com/mapteb/todomvc-revisited) for the TodoMVC UI application.
+The technique used in this Java project can be easily adapted to front-end JavaScript UI applications. Here is an [example](https://github.com/mapteb/state-transitions-with-webcomponents) for the TodoMVC UI application.
 
 ### More Info
 
